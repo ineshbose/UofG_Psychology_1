@@ -1,21 +1,21 @@
----
-title: "Level 1 Lab 4: In-Class"
-author: "Inesh Bose"
-date: "Semester 2 2019"
-output: html_document
----
+#---
+# title: "Level 1 Lab 4: In-Class"
+# author: "Inesh Bose"
+# date: "Semester 2 2019"
+# output: html_document
+#---
 
-Activity 1
-```{r}
+## Activity 1
+
 library(tidyverse)
 
 demo <- read_csv("demographics.csv")
 mslq <- read_csv("mslq.csv")
 teams <- read_csv("team-name.csv")
-```
 
-Activity 2
-```{r}
+
+## Activity 2
+
 demo_final <- demo %>% 
   group_by(user_id, q_id) %>% 
   filter(session_id == min(session_id), endtime == min(endtime)) %>% 
@@ -44,26 +44,26 @@ mslq_final <- mslq %>%
   select(user_id, user_sex, user_age, q_name, dv) %>%
   arrange(q_name) %>%
   pivot_wider(names_from = q_name, values_from = dv)
-```
 
-Activity 3
-```{r}
+
+## Activity 3
+
 all_dat <- inner_join(demo_final, mslq_final, by=NULL) %>% 
  inner_join(teams_final, by= NULL)
 
 summary(all_dat)
-```
 
-Activity 4
-```{r}
+
+## Activity 4
+
 selected <- select(all_dat, user_id, user_sex, user_age, anxiety_1, anxiety_2, anxiety_3, anxiety_4, anxiety_5, team) %>% 
   filter(anxiety_1 != "NA" &  anxiety_2 != "NA" & anxiety_3 != "NA" & anxiety_4 != "NA" & anxiety_5 != "NA") %>% 
   filter(user_age<30) %>% 
   filter(user_sex %in% c("male", "female"))
-```
 
-Activity 5
-```{r}
+
+## Activity 5
+
 dat_means_whole <- selected %>%
   pivot_longer(names_to = "var", values_to = "val", anxiety_1:anxiety_5) %>%
   group_by_at(vars(-val, -var)) %>%
@@ -75,16 +75,16 @@ dat_means_group <- selected %>% filter(team == 56) %>%
   group_by_at(vars(-val, -var)) %>%
   summarise(scale_mean = mean(val, na.rm = TRUE)) %>%
   ungroup()
-```
 
-Activity 6
-```{r}
+
+## Activity 6
+
 males <- filter(dat_means_whole, user_sex == "male")
 females <- filter(dat_means_whole, user_sex == "female")
-```
 
-Activity 7
-```{r}
+
+## Activity 7
+
 group_mal <- summarise(males, total = sum(scale_mean), mean_m = mean(scale_mean))
 
 
@@ -92,10 +92,10 @@ group_fem <- group_by(.data = females, total = sum(scale_mean), mean_m = mean(sc
                       
 malesy <- summarise(males)
 femaley <- summarise(females)
-```
 
-Activity 8
-```{r}
+
+## Activity 8
+
 scores <- summarise(dat_means_whole, median = median(scale_mean), mean = mean(scale_mean))
 data_sex <- group_by(dat_means_whole, user_sex)
 data_scores <- summarise(data_sex, median = median(scale_mean), mean = mean(scale_mean))
@@ -103,10 +103,10 @@ data_scores <- summarise(data_sex, median = median(scale_mean), mean = mean(scal
 Gscores <- summarise(dat_means_whole, median = median(scale_mean), mean = mean(scale_mean))
 Gdata_sex <- group_by(dat_means_whole, user_sex)
 Gdata_scores <- summarise(data_sex, median = median(scale_mean), mean = mean(scale_mean))
-```
 
-Activity 9
-```{r}
+
+## Activity 9
+
 dat_means_whole %>%
   ggplot(aes(x = user_sex, y = scale_mean)) +
   stat_summary(geom = "bar", fun.y = "mean") +
@@ -127,4 +127,3 @@ ggplot(dat_means_group, aes(user_sex, scale_mean)) +
   geom_boxplot(width = .2) +
   theme_minimal()
 ggsave("group_violin.png")
-```
