@@ -9,4 +9,4 @@ A questionnaire dataset was analysed in R Studio.
 
 ## Homework
 The homework expected to polish R Studio skills. <br />
-**Grade:**
+**Grade:** A3
